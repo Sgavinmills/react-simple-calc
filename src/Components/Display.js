@@ -1,8 +1,8 @@
-const Display = () => {
+const Display = ({liveDisplay, formulaDisplay}) => {
     return (
         <div className="Display">
-            <p>1738+17619-</p>
-            <h2>6282</h2>
+            <p>{formulaDisplay}</p>
+            <h2>{liveDisplay}</h2>
         </div>
     );
 };
