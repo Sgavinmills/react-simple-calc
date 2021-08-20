@@ -1,59 +1,67 @@
 import { useState, useEffect } from "react";
 import { performCalc } from "../Utils/helperFunctions";
 
-const Buttons = ({ liveDisplay, formulaDisplay, setLiveDisplay, setFormulaDisplay }) => {
-
+const Buttons = ({
+  liveDisplay,
+  formulaDisplay,
+  setLiveDisplay,
+  setFormulaDisplay,
+}) => {
   //reset this one when display is cleared
   const [inputComplete, setInputComplete] = useState(false);
   const insertOperator = ({ target: { value } }) => {
-
-    setFormulaDisplay((currentFormula) => {
-      if (value !== '=') {
-        return currentFormula + liveDisplay + value;
-      } else {
-        setInputComplete(true);
-        return currentFormula + liveDisplay;
+    if (!inputComplete) {
+      if (liveDisplay !== "") {
+        setFormulaDisplay((currentFormula) => {
+          if (value !== "=") {
+            return currentFormula + liveDisplay + value;
+          } else {
+            setInputComplete(true);
+            return currentFormula + liveDisplay;
+          }
+        });
+        setLiveDisplay("");
       }
-    });
-    setLiveDisplay("");
+    }
+  };
+
+  const plusMinusToggle = () => {
+    //if value is a minus sign and there are already numbers/decimal in string dont do any of this
+    //or separate out
+    if (liveDisplay === "-") {
+      setLiveDisplay("");
+    } else if (liveDisplay === "") {
+      setLiveDisplay("-");
+    }
   };
 
   const insertNum = ({ target: { value } }) => {
-//if value is a minus sign and there are already numbers/decimal in string dont do any of this
-//or separate out
-    if (value === '-' && liveDisplay === '-') {
-      setLiveDisplay("");
-    } else {
-
+    if (!inputComplete) {
       setLiveDisplay((currentNum) => {
         return currentNum + value;
       });
     }
-
   };
-  const finishCalc = () => {
 
+  const finishCalc = () => {
     let answer = performCalc(formulaDisplay);
     //strip off 0000001
     setLiveDisplay(answer);
-  }
+  };
+
   useEffect(() => {
     finishCalc();
-  }, [inputComplete])
+  }, [inputComplete]);
 
   // useEffect(finishCalc(), [inputComplete])
 
   const clearDisplay = ({ target: { value } }) => {
     if (value === "AC" || inputComplete) {
       setFormulaDisplay("");
-
     }
     setLiveDisplay("");
     setInputComplete(false);
   };
-
-
-
 
   return (
     <div className="Buttons">
@@ -63,9 +71,11 @@ const Buttons = ({ liveDisplay, formulaDisplay, setLiveDisplay, setFormulaDispla
       <button onClick={clearDisplay} value="C">
         C
       </button>
-      <button onClick={insertNum} value="-">+/-</button>
-      <button className="operator" onClick={insertOperator} value=" / ">
-        /
+      <button onClick={plusMinusToggle} value="-">
+        +/-
+      </button>
+      <button className="operator" onClick={insertOperator} value=" ÷ ">
+        ÷
       </button>
       <button className="numButton" onClick={insertNum} value="7">
         7
@@ -107,8 +117,12 @@ const Buttons = ({ liveDisplay, formulaDisplay, setLiveDisplay, setFormulaDispla
         0
       </button>
       <button>%</button>
-      <button onClick={insertNum} value=".">.</button>
-      <button onClick={insertOperator} value="=">=</button>
+      <button onClick={insertNum} value=".">
+        .
+      </button>
+      <button onClick={insertOperator} value="=">
+        =
+      </button>
     </div>
   );
 };
