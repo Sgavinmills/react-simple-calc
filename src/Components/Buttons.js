@@ -7,7 +7,6 @@ const Buttons = ({
   setLiveDisplay,
   setFormulaDisplay,
 }) => {
-  //reset this one when display is cleared
   const [inputComplete, setInputComplete] = useState(false);
   const insertOperator = ({ target: { value } }) => {
     if (!inputComplete) {
