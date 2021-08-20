@@ -11,8 +11,12 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Display liveDisplay={liveDisplay} formulaDisplay={formulaDisplay} />
-      <Buttons liveDisplay={liveDisplay} formulaDisplay={formulaDisplay} setLiveDisplay={setLiveDisplay} setFormulaDisplay={setFormulaDisplay} />
+      <div className="display-container">
+        <Display liveDisplay={liveDisplay} formulaDisplay={formulaDisplay} />
+      </div>
+      <div className="button-container">
+          <Buttons liveDisplay={liveDisplay} formulaDisplay={formulaDisplay} setLiveDisplay={setLiveDisplay} setFormulaDisplay={setFormulaDisplay} />
+      </div>
     </div>
   );
 }
