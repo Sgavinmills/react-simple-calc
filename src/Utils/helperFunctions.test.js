@@ -31,7 +31,7 @@ describe("performCalc()", () => {
   test("negative numbers", () => {
     expect(performCalc("-4 - 2")).toBe('-6');
   });
-  test.skip("decimal numbers", () => {
+  test("decimal numbers", () => {
     expect(performCalc("2.2 + 6.4")).toBe('8.6');
   });
 });
