@@ -1,29 +1,59 @@
+import { useState, useEffect } from "react";
+import { performCalc } from "../Utils/helperFunctions";
+
 const Buttons = ({ liveDisplay, formulaDisplay, setLiveDisplay, setFormulaDisplay }) => {
 
-
+  //reset this one when display is cleared
+  const [inputComplete, setInputComplete] = useState(false);
   const insertOperator = ({ target: { value } }) => {
+
     setFormulaDisplay((currentFormula) => {
-      return currentFormula + liveDisplay + value;
+      if (value !== '=') {
+        return currentFormula + liveDisplay + value;
+      } else {
+        setInputComplete(true);
+        return currentFormula + liveDisplay;
+      }
     });
     setLiveDisplay("");
   };
 
   const insertNum = ({ target: { value } }) => {
-    setLiveDisplay((currentNum) => {
-      return currentNum + value;
-    });
+//if value is a minus sign and there are already numbers/decimal in string dont do any of this
+//or separate out
+    if (value === '-' && liveDisplay === '-') {
+      setLiveDisplay("");
+    } else {
+
+      setLiveDisplay((currentNum) => {
+        return currentNum + value;
+      });
+    }
+
   };
+  const finishCalc = () => {
+
+    let answer = performCalc(formulaDisplay);
+    //strip off 0000001
+    setLiveDisplay(answer);
+  }
+  useEffect(() => {
+    finishCalc();
+  }, [inputComplete])
+
+  // useEffect(finishCalc(), [inputComplete])
 
   const clearDisplay = ({ target: { value } }) => {
-    if (value === "AC") {
+    if (value === "AC" || inputComplete) {
       setFormulaDisplay("");
+
     }
     setLiveDisplay("");
+    setInputComplete(false);
   };
 
-  const performCalc = () => {
 
-  }
+
 
   return (
     <div className="Buttons">
@@ -33,7 +63,7 @@ const Buttons = ({ liveDisplay, formulaDisplay, setLiveDisplay, setFormulaDispla
       <button onClick={clearDisplay} value="C">
         C
       </button>
-      <button>+/-</button>
+      <button onClick={insertNum} value="-">+/-</button>
       <button className="operator" onClick={insertOperator} value=" / ">
         /
       </button>
@@ -77,8 +107,8 @@ const Buttons = ({ liveDisplay, formulaDisplay, setLiveDisplay, setFormulaDispla
         0
       </button>
       <button>%</button>
-      <button>.</button>
-      <button onClick={() => performCalc(formulaDisplay)}>=</button>
+      <button onClick={insertNum} value=".">.</button>
+      <button onClick={insertOperator} value="=">=</button>
     </div>
   );
 };
